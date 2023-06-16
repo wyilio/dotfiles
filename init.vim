@@ -10,7 +10,9 @@ inoremap jk <esc>
 call plug#begin('~/.neovim-plugins')
 
 " Tooling Plugins
-Plug 'preservim/nerdtree'
+Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/syntastic'
+Plug 'scrooloose/nerdcommenter'
 Plug 'morhetz/gruvbox'
 Plug 'rust-lang/rust.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -89,10 +91,8 @@ set foldmethod=syntax
 " NERDTree Config
 let g:NERDTreeWinPos = "left"
 
-nnoremap <Leader>n :call OpenNerdTreePanel()<cr>
+nnoremap <Leader>n ::NERDTreeToggle<cr>
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
-nnoremap <leader>i :tabnew<bar>call OpenNerdTreePanel()<CR>
-nnoremap <leader>D :tabclose<CR>
 
 " Navigation Shortcuts
 
