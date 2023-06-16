@@ -7,8 +7,6 @@ nnoremap <Leader>src :source $MYVIMRC<cr>
 nnoremap <Leader>t :vsplit <bar> :set nonumber <bar> :terminal <CR>i
 inoremap jk <esc>
 
-echom "This is a test"
-
 call plug#begin('~/.neovim-plugins')
 
 " Tooling Plugins
