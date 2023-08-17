@@ -1,20 +1,29 @@
+set encoding=UTF-8
 " File loads and Default Settings
 let mapleader = ","
 
 " Shortcuts
-nnoremap <Leader>erc :split $MYVIMRC<cr>
+nnoremap <Leader>erc :vsplit $MYVIMRC<cr>
 nnoremap <Leader>src :source $MYVIMRC<cr>
-nnoremap <Leader>t :vsplit <bar> :set nonumber <bar> :terminal <CR>i
+" nnoremap <Leader>t :call InitTerminal() <cr>
+nnoremap <Leader>t :FloatermToggle<cr>
+nnoremap <leader>b :!./build.sh<CR>
 inoremap jk <esc>
+
+" disable keybindings
+inoremap <esc> <nop>
 
 call plug#begin('~/.neovim-plugins')
 
 " Tooling Plugins
 Plug 'scrooloose/nerdtree'
+" Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdcommenter'
 Plug 'morhetz/gruvbox'
-Plug 'rust-lang/rust.vim'
+Plug 'voldikss/vim-floaterm'
+
+" Plug 'rust-lang/rust.vim'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'majutsushi/tagbar'
 Plug 'vim-scripts/bash-support.vim'
@@ -25,23 +34,17 @@ Plug 'rking/ag.vim'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'kien/ctrlp.vim'
-" Plug 'Valloric/YouCompleteMe'
+Plug 'jiangmiao/auto-pairs'
+Plug 'Azul3DInc/ClangToStringTemplate', {'rtp': 'cpp-gen/'}
 
 call plug#end()
-
-" WSL Only
-let uname = substitute(system('uname'),'\n','','')
-if uname == 'Linux'
-    if system('$PATH')=~ '/mnt/c/WINDOWS'
-        set clipboard=unnamedplus " sync system and wsl2 clipboard
-    endif
-endif
 
 " Theme Customization
 set background=dark
 let base16colorspace=256
 set termguicolors
 autocmd vimenter * ++nested colorscheme gruvbox " default gruvbox
+
 
 " GUI Settings
 set noerrorbells
@@ -75,14 +78,10 @@ set expandtab
 let g:rustfmt_autosave=1
 
 " coc config
+nnoremap <Leader>o :call CocAction('runCommand', 'rust-analyzer.openDocs')<cr>
+nnoremap <Leader>e :call CocAction('runCommand', 'rust-analyzer.explainError')<cr>
 nnoremap <Leader>h :call CocAction('doHover')<cr>
 nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
-
-" resize" resize current buffer by +/- 5 
-" nnoremap <Up>    :resize -2<CR>
-" nnoremap <Down>  :resize +2<CR>
-" nnoremap <Left>  :vertical resize -2<CR>
-" nnoremap <Right> :vertical resize +2<CR>
 
 " Folds
 set nofoldenable
@@ -91,7 +90,7 @@ set foldmethod=syntax
 " NERDTree Config
 let g:NERDTreeWinPos = "left"
 
-nnoremap <Leader>n ::NERDTreeToggle<cr>
+nnoremap <Leader>n :NERDTreeToggle<cr>
 nnoremap <silent> <Leader>v :NERDTreeFind<CR>
 
 " Navigation Shortcuts
@@ -111,8 +110,25 @@ nmap <leader>s<right>  :rightbelow vnew<CR>
 nmap <leader>s<up>     :leftabove  new<CR>
 nmap <leader>s<down>   :rightbelow new<CR>
 
+" WSL only
+let g:netrw_wsl_cmd = "wslview"
+let g:clipboard = {
+  \   'name': 'WslClipboard',
+  \   'copy': {
+  \      '+': 'clip.exe',
+  \      '*': 'clip.exe',
+  \    },
+  \   'paste': {
+  \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+  \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
+  \   },
+  \   'cache_enabled': 0,
+  \ }
+
 " default feature enable
 set backspace=indent,eol,start
 
-" disable keybindings
-inoremap <esc> <nop>
+" Autocommands
+" autocmd VimEnter * FloatermNew
+autocmd VimEnter * NERDTreeToggle 
+
