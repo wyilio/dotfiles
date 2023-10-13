@@ -35,14 +35,12 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'kien/ctrlp.vim'
 Plug 'jiangmiao/auto-pairs'
-Plug 'Azul3DInc/ClangToStringTemplate', {'rtp': 'cpp-gen/'}
 
 call plug#end()
 
 " Theme Customization
 set background=dark
 let base16colorspace=256
-set termguicolors
 autocmd vimenter * ++nested colorscheme gruvbox " default gruvbox
 
 
