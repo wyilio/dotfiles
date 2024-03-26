@@ -17,6 +17,9 @@ call plug#begin('~/.neovim-plugins')
 
 " Tooling Plugins
 Plug 'scrooloose/nerdtree'
+Plug 'github/copilot.vim'
+Plug 'tpope/vim-fugitive'
+
 " Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/syntastic'
 Plug 'scrooloose/nerdcommenter'
@@ -35,6 +38,13 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 Plug 'kien/ctrlp.vim'
 Plug 'jiangmiao/auto-pairs'
+Plug 'hashivim/vim-terraform'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
+Plug 'rhysd/git-messenger.vim'
+Plug 'pangloss/vim-javascript'
+
+Plug 'LnL7/vim-nix'
 
 call plug#end()
 
@@ -42,6 +52,12 @@ call plug#end()
 set background=dark
 let base16colorspace=256
 autocmd vimenter * ++nested colorscheme gruvbox " default gruvbox
+
+" Telescope
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 
 " GUI Settings
@@ -77,9 +93,50 @@ let g:rustfmt_autosave=1
 
 " coc config
 nnoremap <Leader>o :call CocAction('runCommand', 'rust-analyzer.openDocs')<cr>
-nnoremap <Leader>e :call CocAction('runCommand', 'rust-analyzer.explainError')<cr>
+" nnoremap <Leader>e :call CocAction('runCommand', 'rust-analyzer.explainError')<cr>
 nnoremap <Leader>h :call CocAction('doHover')<cr>
+nnoremap <Leader>j :call CocAction('diagnosticNext')<cr>
+nnoremap <Leader>k :call CocAction('diagnosticPrevious')<cr>
+nnoremap <Leader>es :CocCommand eslint.executeAutofix<cr>
 nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+
+filetype plugin indent on
+
+" ======= coc settings
+set updatetime=300
+set shortmess+=c
+
+nnoremap <leader>fl :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('&lt;cword&gt;')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
+
+let s:LSP_CONFIG = {
+\  'flow': {
+\    'command': exepath('flow'),
+\    'args': ['lsp'],
+\    'filetypes': ['javascript', 'javascriptreact'],
+\    'initializationOptions': {},
+\    'requireRootPattern': 1,
+\    'settings': {},
+\    'rootPatterns': ['.flowconfig']
+\  }
+\}
+
+let s:languageservers = {}
+for [lsp, config] in items(s:LSP_CONFIG)
+  let s:not_empty_cmd = !empty(get(config, 'command'))
+  if s:not_empty_cmd | let s:languageservers[lsp] = config | endif
+endfor
+
+if !empty(s:languageservers)
+  call coc#config('languageserver', s:languageservers)
+  endif
 
 " Folds
 set nofoldenable
@@ -110,18 +167,6 @@ nmap <leader>s<down>   :rightbelow new<CR>
 
 " WSL only
 let g:netrw_wsl_cmd = "wslview"
-let g:clipboard = {
-  \   'name': 'WslClipboard',
-  \   'copy': {
-  \      '+': 'clip.exe',
-  \      '*': 'clip.exe',
-  \    },
-  \   'paste': {
-  \      '+': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-  \      '*': 'powershell.exe -c [Console]::Out.Write($(Get-Clipboard -Raw).tostring().replace("`r", ""))',
-  \   },
-  \   'cache_enabled': 0,
-  \ }
 
 " default feature enable
 set backspace=indent,eol,start
