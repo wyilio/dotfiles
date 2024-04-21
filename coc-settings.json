@@ -12,18 +12,5 @@
     "diagnostic.level": "information",
     "signature.enable": false,
     "coc.preferences.snippets.enable": false,
-    "rust-analyzer.diagnostics.enable": false,
-    "rust-analyzer.checkOnSave": true,
-    "rust-analyzer.procMacro.enable": true,
-    "rust-analyzer.procMacro.attributes.enable": true,
-    "rust-analyzer.completion.autoimport.enable": true,
-    "rust-analyzer.completion.autoself.enable": true,
-    "rust-analyzer.completion.callable.snippets": true,
-    "rust-analyzer.cargo.buildScripts.enable": true,
-    "rust-analyzer.trace.server": "verbose",
-    "rust-analyzer.hover.documentation.enable": true,
-    "rust-analyzer.hover.documentation.keywords.enable": true,
-    "rust-analyzer.cargo.loadOutDirsFromCheck": true,
-    "rust-analyzer.hover.links.enable": true
 }
 
