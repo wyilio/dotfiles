@@ -9,6 +9,7 @@ nnoremap <Leader>src :source $MYVIMRC<cr>
 nnoremap <Leader>t :FloatermToggle<cr>
 nnoremap <leader>b :!./build.sh<CR>
 inoremap jk <esc>
+cabbrev Qa! qa!
 
 " disable keybindings
 inoremap <esc> <nop>
@@ -43,6 +44,7 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 Plug 'rhysd/git-messenger.vim'
 Plug 'pangloss/vim-javascript'
+Plug 'puremourning/vimspector'
 
 Plug 'LnL7/vim-nix'
 
@@ -67,7 +69,7 @@ set showcmd " show cmd command
 set mouse=a " enable mouse usage
 set showtabline=1
 set guioptions+=e
-set guifont=Monospace\ 9
+" set guifont=Monospace\ 9
 set ignorecase
 set smartcase
 set hlsearch
@@ -93,12 +95,15 @@ let g:rustfmt_autosave=1
 
 " coc config
 nnoremap <Leader>o :call CocAction('runCommand', 'rust-analyzer.openDocs')<cr>
-" nnoremap <Leader>e :call CocAction('runCommand', 'rust-analyzer.explainError')<cr>
 nnoremap <Leader>h :call CocAction('doHover')<cr>
 nnoremap <Leader>j :call CocAction('diagnosticNext')<cr>
 nnoremap <Leader>k :call CocAction('diagnosticPrevious')<cr>
 nnoremap <Leader>es :CocCommand eslint.executeAutofix<cr>
 nmap <silent> gd :call CocAction('jumpDefinition', 'vsplit')<CR>
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
 
 filetype plugin indent on
 
@@ -168,10 +173,21 @@ nmap <leader>s<down>   :rightbelow new<CR>
 " WSL only
 let g:netrw_wsl_cmd = "wslview"
 
-" default feature enable
+" Default feature enable
 set backspace=indent,eol,start
 
-" Autocommands
-" autocmd VimEnter * FloatermNew
-autocmd VimEnter * NERDTreeToggle 
+" Neovide
+if exists("g:neovide")
+  let g:neovide_input_use_logo=v:true
+  map <D-v> "+p<CR>
+  map! <D-v> <C-R>+
+  tmap <D-v> <C-R>+
+  vmap <D-c> "+y<CR>
+endif
 
+
+" Vimspector
+nmap <Leader>di <Plug>VimspectorBalloonEval
+xmap <Leader>di <Plug>VimspectorBalloonEval
+nnoremap <Leader>bp <Plug>VimspectorToggleBreakpoint
+nnoremap <Leader>vi :call vimspector#Launch()<CR>
